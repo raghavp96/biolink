@@ -27,12 +27,24 @@ def getNodes(node):
     elif node == "protein":
         dao = EntityDao("Protein")
         # TODO returning dummy data for now
-        return jsonify({
-            test: 'hello world'
-        })
+        test_protein_info = {
+            "Entities": [
+                {
+                    "proteinId": 1,
+                    "proteinName": "Protein 1"
+                },
+                {
+                    "proteinId": 2,
+                    "proteinName": "Protein Numbah 2"
+                }
+            ],
+            "Page": page
+        }
+        return jsonify(test_protein_info)
     else:
         return jsonify({})
-    
+    entities = dao.getEntities(page)
+    print(entities)
     return jsonify(dao.getEntities(page))
 
 
@@ -42,6 +54,10 @@ def getNodeDetails(node, nodeName):
         dao = EntityDao("Gene")
     elif node == "disease":
         dao = EntityDao("Disease")
+    elif node == "protein":
+        return jsonify({
+            'test': 'hello world'
+        })
     else:
         return jsonify({})
 
@@ -55,7 +71,22 @@ def searchNodes():
     nodeVal = ""
     if "nodeVal" in request.args:
         nodeVal = request.args.get("nodeVal")
-    
+
+        # TODO fix this later, this is just going to return dummy data
+        if nodeVal == "protein":
+            test_protein_info = [
+                {
+                    "proteinId": 1,
+                    "proteinName": "Protein 1"
+                },
+                {
+                    "proteinId": 2,
+                    "proteinName": "Protein Numbah 2"
+                }
+            ]
+
+            return jsonify(test_protein_info)
+
         for entity_schema in config.schema:
             dao = EntityDao(entity_schema["entityType"])
             resp[entity_schema["entityType"]] = dao.searchEntities(nodeVal)

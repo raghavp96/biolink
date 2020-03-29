@@ -12,6 +12,13 @@ const schema = [
             "diseaseName", "diseaseId"
         ],
         nameKey: "diseaseName"
+    },
+    {
+        entityType: "protein",
+        propertiesOfImportance: [
+            "proteinName", "proteinId"
+        ],
+        nameKey: "proteinName"
     }
 ]
 

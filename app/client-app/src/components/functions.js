@@ -1,6 +1,6 @@
 // REST API Calls
 
-const allowedEntityTypes = ["gene", "disease"]
+const allowedEntityTypes = ["gene", "disease", "protein"]
 
 async function loadEntities(entityType, page) {
     var page_number = encodeURIComponent(page)
@@ -68,6 +68,10 @@ async function loadDiseaseInfo(diseaseName) {
     }).then((res) => (res.json()));
 
     return response;
+}
+
+async function loadProteinInfo(proteinName) {
+    
 }
 
 export { loadDiseaseInfo, loadGeneInfo, loadEntities, loadSearchResults };

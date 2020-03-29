@@ -12,11 +12,11 @@ function Entities(props) {
   const [entities, setEntities] = useState([]);
   const [properties, setProperties] = useState([]);
 
-  console.log('i am here');
   useEffect(() => {
     async function fetchData() {
       const response = await loadEntities(entityType, page);
       const newEntities = entities.concat(response);
+      console.log(newEntities);
       setEntities(newEntities);
       if (newEntities.length > 0) {
         const unorderedProps = Object.keys(newEntities[0]);
