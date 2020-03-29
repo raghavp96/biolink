@@ -55,9 +55,23 @@ def getNodeDetails(node, nodeName):
     elif node == "disease":
         dao = EntityDao("Disease")
     elif node == "protein":
-        return jsonify({
-            'test': 'hello world'
-        })
+        protein_table = {
+            "Protein 1": {
+                "EntityName": "Protein 1",
+                "Neigbhors": [],
+                "RelatedProtein": ["Protein Numbah 2"]
+            },
+            "Protein Numbah 2": {
+                "EntityName": "Protein Numbah 2",
+                "Neighbors": [],
+                "RelatedProtein": ["Protein 1"]
+            }
+        }
+        return jsonify(protein_table.get(nodeName, None))
+        # entity name
+        # neighbors
+        # related protein
+        # dao = EntityDao("Protein")
     else:
         return jsonify({})
 

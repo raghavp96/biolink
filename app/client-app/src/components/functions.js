@@ -71,7 +71,16 @@ async function loadDiseaseInfo(diseaseName) {
 }
 
 async function loadProteinInfo(proteinName) {
-    
+    var url = new URL("http://localhost:5000/protein/" + proteinName)
+    let response = await fetch(url, {
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((res) => (res.json()));
+
+    return response;
 }
 
-export { loadDiseaseInfo, loadGeneInfo, loadEntities, loadSearchResults };
+export { loadProteinInfo, loadDiseaseInfo, loadGeneInfo, loadEntities, loadSearchResults };
