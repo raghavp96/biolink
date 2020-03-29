@@ -12,7 +12,7 @@ function Entities(props) {
   const [entities, setEntities] = useState([]);
   const [properties, setProperties] = useState([]);
 
-
+  console.log('i am here');
   useEffect(() => {
     async function fetchData() {
       const response = await loadEntities(entityType, page);
@@ -40,5 +40,6 @@ function Entities(props) {
 
 const Genes = () => (<Entities title="Genes" entityType="gene"/>)
 const Diseases = () => (<Entities title="Diseases" entityType="disease"/>)
+const Proteins = () => (<Entities title="Proteins" entityType="protein"/>)
 
-export { Genes, Diseases }
+export { Genes, Diseases, Proteins }

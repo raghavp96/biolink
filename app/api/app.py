@@ -24,6 +24,12 @@ def getNodes(node):
         dao = EntityDao("Gene")
     elif node == "disease":
         dao = EntityDao("Disease")
+    elif node == "protein":
+        dao = EntityDao("Protein")
+        # TODO returning dummy data for now
+        return jsonify({
+            test: 'hello world'
+        })
     else:
         return jsonify({})
     

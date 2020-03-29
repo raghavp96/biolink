@@ -2,9 +2,10 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom";
 
-import { Genes, Diseases } from './components/Entities';
+import { Genes, Diseases, Proteins } from './components/Entities';
 import Gene from './components/Gene';
 import Disease from './components/Disease';
+import Protein from './components/Protein';
 import Search from './components/Search';
 
 
@@ -25,6 +26,9 @@ export default function App() {
           <li>
             <Link to="/disease">Diseases</Link>
           </li>
+          <li>
+            <Link to="/protein">Proteins</Link>
+          </li>
         </ul>
 
         <Switch>
@@ -42,6 +46,9 @@ export default function App() {
           </Route>
           <Route path="/disease">
             <Diseases />
+          </Route>
+          <Route path="/protein">
+            <Proteins />
           </Route>
           <Route path="/">
             <Search />
