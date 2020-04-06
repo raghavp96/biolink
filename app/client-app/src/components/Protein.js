@@ -35,7 +35,7 @@ export default function Protein() {
         </ul>
       </div>
       <div>
-        Genes Encoded For
+        Encoded By Gene
       </div>
         
     </div>
