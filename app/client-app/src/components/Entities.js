@@ -40,5 +40,7 @@ function Entities(props) {
 
 const Genes = () => (<Entities title="Genes" entityType="gene"/>)
 const Diseases = () => (<Entities title="Diseases" entityType="disease"/>)
+const Compounds = () => (<Entities title="Compounds" entityType="compound"/>)
+const Assays = () => (<Entities title="Assays" entityType="assay"/>)
 
-export { Genes, Diseases }
+export { Genes, Diseases , Compounds, Assays}

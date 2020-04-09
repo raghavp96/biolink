@@ -12,6 +12,20 @@ const schema = [
             "diseaseName", "diseaseId"
         ],
         nameKey: "diseaseName"
+    },
+    {
+        entityType: "compound",
+        propertiesOfImportance: [
+            "name", "link"
+        ],
+        nameKey: "name"
+    },
+    {
+        entityType: "assay",
+        propertiesOfImportance: [
+            "Name", "link", "desc"
+        ],
+        nameKey: "Name"
     }
 ]
 

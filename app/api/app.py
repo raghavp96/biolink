@@ -24,9 +24,13 @@ def getNodes(node):
         dao = EntityDao("Gene")
     elif node == "disease":
         dao = EntityDao("Disease")
+    elif node == "compound":
+        dao = EntityDao("Compound")
+    elif node == "assay":
+        dao = EntityDao("Assay")
     else:
         return jsonify({})
-    
+
     return jsonify(dao.getEntities(page))
 
 
@@ -36,6 +40,10 @@ def getNodeDetails(node, nodeName):
         dao = EntityDao("Gene")
     elif node == "disease":
         dao = EntityDao("Disease")
+    elif node == "compound":
+        dao = EntityDao("Compound")
+    elif node == "assay":
+        dao = EntityDao("Assay")
     else:
         return jsonify({})
 
@@ -49,11 +57,11 @@ def searchNodes():
     nodeVal = ""
     if "nodeVal" in request.args:
         nodeVal = request.args.get("nodeVal")
-    
+
         for entity_schema in config.schema:
             dao = EntityDao(entity_schema["entityType"])
             resp[entity_schema["entityType"]] = dao.searchEntities(nodeVal)
-    
+
     return jsonify(resp)
 
 

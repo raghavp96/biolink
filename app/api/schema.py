@@ -33,5 +33,38 @@ schema = [
                 "FromNode" : "Gene"
             }
         ]
+    },
+    {
+        "entityType" : "Compound",
+        "entityIdKey" : "cid",
+        "entityNameKey" : "name",
+        "properties" : [
+            "link"
+        ],
+        "relationships" : [
+            {
+                "NeighborType" : "Assay",
+                "NeighborNameKey" : "Name",
+                "RelationName" : "TestsFor",
+                "FromNode" : "Compound"
+            }
+        ]
+    },
+    {
+        "entityType" : "Assay",
+        "entityIdKey" : "AID",
+        "entityNameKey" : "Name",
+        "properties" : [
+            "link",
+            "desc"
+        ],
+        "relationships" : [
+            {
+                "NeighborType" : "Gene",
+                "NeighborNameKey" : "geneName",
+                "RelationName" : "InteractsWith",
+                "FromNode" : "Assay"
+            }
+        ]
     }
 ]

@@ -3,7 +3,7 @@ import pprint
 
 class DB(object):
 
-    def __init__(self, uri='bolt://localhost:7687', user="neo4j", password="admin"):
+    def __init__(self, uri='bolt://localhost:7687', user="neo4j", password="Siddabest8055"):
         self._driver = GraphDatabase.driver(uri, auth=(user, password))
 
     def close(self):
@@ -49,7 +49,7 @@ class DB(object):
         if relationship_details["FromNode"] == entityType:
             query_string += 'where size((n)<-[:'+relationship_details["RelationName"]+']-(:'+entityType+')) > ' + str(num_associations) + ' with collect(n) as neighbors '
             query_string += 'match (n1:'+neighborType+')<-[a:'+relationship_details["RelationName"]+']-(e:'+entityType+' {'+entityNameKey+': "' + entityName + '"}) '
-        
+
         else:  #from node is neighbor type
             query_string += 'where size((n)-[:'+relationship_details["RelationName"]+']->(:'+entityType+')) > ' + str(num_associations) + ' with collect(n) as neighbors '
             query_string += 'match (n1:'+neighborType+')-[a:'+relationship_details["RelationName"]+']->(e:'+entityType+' {'+entityNameKey+': "' + entityName + '"}) '
@@ -75,7 +75,7 @@ class DB(object):
             query_string += 'where size((e)<-[:'+relationship_details["RelationName"]+']-(:'+neighborType+')) > ' + str(num_associations) + ' with collect(e) as entities '
             query_string += 'match (e1:'+entityType+')<-[b:'+relationship_details["RelationName"]+']-(n:'+neighborType+')-[a:'+relationship_details["RelationName"]+']->(target:'+entityType+' {'+entityNameKey+' : "' + entityName + '"}) '
 
-        query_string += 'where e1 in entities and b.score > ' + str(acceptable_association_score) + ' and a.score > ' + str(acceptable_association_score) + ' return e1;' 
+        query_string += 'where e1 in entities and b.score > ' + str(acceptable_association_score) + ' and a.score > ' + str(acceptable_association_score) + ' return e1;'
         result = tx.run(query_string)
         return result.data()
 

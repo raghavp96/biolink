@@ -20,9 +20,9 @@ def build():
         nodes = config["nodes"]
         edges = config["edges"]
 
-        if os.path.exists(csv_dir_path):
-            shutil.rmtree(csv_dir_path)
-        os.mkdir(csv_dir_path)
+        # if os.path.exists(csv_dir_path):
+        #     shutil.rmtree(csv_dir_path)
+        # os.mkdir(csv_dir_path)
 
         for node in nodes:
             db_type = node["dataSource"]["dbType"]
@@ -32,7 +32,7 @@ def build():
 
             print("Exporting " + node["entityType"] + " info (i.e. " + str(node["properties"]) + ") from " + node["dataSource"]["dbFile"] + " into CSV file...")
             export_db_csv(db_type, db_file_path, query_file_path, csv_file_path)
- 
+
             print("Loading CSV details for " + node["entityType"] + " into Neo4j...")
             load_db(node, csv_file_path)
 
@@ -47,13 +47,13 @@ def build():
 
             print("Loading CSV details for " + edge["entityType"] + " into Neo4j...")
             load_db(edge, csv_file_path, isNode=False)
-            
+
 
 def export_db_csv(db_type, db_path, query_file_path, csv_file_path):
     if db_type == "sqllite3":
         sqllite_csv_path = os.path.join(dir_path, "sqlite_csv.sh")
         subprocess.run(
-            [sqllite_csv_path, db_path, query_file_path, csv_file_path], 
+            [sqllite_csv_path, db_path, query_file_path, csv_file_path],
             check=True, shell=False)
     elif db_type == "gaf":
         subprocess.run(
@@ -99,7 +99,7 @@ def load_db(entity, csv_file_path, isNode=True):
                 query += " e." + prop + " = toFloat(row." + prop + ")"
             else:
                 query += " e." + prop + " = row." + prop
-        
+
         query += ";"
         run_query(query)
 
@@ -110,7 +110,7 @@ def is_numeric(property):
 
 def run_query(query_string):
     from neo4j import GraphDatabase
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "admin"))
+    driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "Siddabest8055"))
 
     print(query_string)
 
@@ -157,6 +157,6 @@ if __name__ == '__main__':
     if "create" in args:
         build()
     elif "delete" in args:
-        delete() 
+        delete()
     else:
         print("wtf")

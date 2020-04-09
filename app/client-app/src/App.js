@@ -2,9 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch, useParams } from "react-router-dom";
 
-import { Genes, Diseases } from './components/Entities';
-import Gene from './components/Gene';
-import Disease from './components/Disease';
+import { Genes, Diseases, Compounds, Assays } from './components/Entities';
 import Search from './components/Search';
 
 
@@ -25,23 +23,29 @@ export default function App() {
           <li>
             <Link to="/disease">Diseases</Link>
           </li>
+          <li>
+            <Link to="/compound">Compound</Link>
+          </li>
+          <li>
+            <Link to="/assay">Assay</Link>
+          </li>
         </ul>
 
         <Switch>
           {/* <Route path="/about">
             <About />
           </Route> */}
-          <Route path={`/gene/:geneName`}>
-            <Gene />
-          </Route>
-          <Route path={`/disease/:diseaseName`}>
-            <Disease />
-          </Route>
           <Route path="/gene">
             <Genes />
           </Route>
           <Route path="/disease">
             <Diseases />
+          </Route>
+          <Route path="/compound">
+            <Compounds />
+          </Route>
+          <Route path="/assay">
+            <Assays />
           </Route>
           <Route path="/">
             <Search />

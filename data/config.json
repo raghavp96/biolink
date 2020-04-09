@@ -34,6 +34,39 @@
                 "queryFile" : "export_disease.sql",
                 "dbType" : "sqllite3"
             }
+        },
+        {
+            "entityType" : "Compound",
+            "entityIdKey" : "cid",
+            "entityNameKey" : "name",
+            "properties" : [
+                "link",
+                "name",
+                "cid"
+            ],
+            "indices" : ["cid", "name"],
+            "dataSource" : {
+                "dbFile" : "",
+                "queryFile" : "",
+                "dbType" : "csv"
+            }
+        },
+        {
+            "entityType" : "Assay",
+            "entityIdKey" : "AID",
+            "entityNameKey" : "Name",
+            "properties" : [
+                "link",
+                "desc",
+                "name",
+                "AID"
+            ],
+            "indices" : ["AID", "Name"],
+            "dataSource" : {
+              "dbFile" : "",
+              "queryFile" : "",
+              "dbType" : "csv"
+            }
         }
     ],
     "edges" : [
@@ -50,6 +83,36 @@
                 "dbFile" : "disgenet_2018.db",
                 "queryFile" : "export_association.sql",
                 "dbType" : "sqllite3"
+            }
+        },
+        {
+            "entityType": "TestsFor",
+            "fromNodeType" : "Compound",
+            "fromNodeKey" : "cid",
+            "toNodeType" : "Assay",
+            "toNodeKey" : "AID",
+            "properties" : [
+                "score"
+            ],
+            "dataSource" : {
+              "dbFile" : "",
+              "queryFile" : "",
+              "dbType" : "csv"
+            }
+        },
+        {
+            "entityType": "InteractsWith",
+            "fromNodeType" : "Assay",
+            "fromNodeKey" : "AID",
+            "toNodeType" : "Gene",
+            "toNodeKey" : "geneId",
+            "properties" : [
+                "score"
+            ],
+            "dataSource" : {
+              "dbFile" : "",
+              "queryFile" : "",
+              "dbType" : "csv"
             }
         }
     ]
