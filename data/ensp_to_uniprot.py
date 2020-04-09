@@ -30,7 +30,7 @@ def chunks(lst: [], n: int):
     :return: List of chunks
     """
     for i in range(0, len(lst), n):
-        yield list[i:i + n]
+        yield lst[i:i + n]
 
 
 def get_uniprot_id_mappings(protein_csv: str):
