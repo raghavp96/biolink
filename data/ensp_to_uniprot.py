@@ -95,7 +95,7 @@ def get_uniprot_id_mappings(protein_csv: str):
     df_complete = df_complete.drop(columns=["organism"])
     df_complete = df_complete[df_complete["ensp_id"] != ""]
 
-    df_complete.to_csv("./sources/ensp_uniprot.csv", index=False)
+    df_complete.to_csv("./data/sources/ensp_uniprot.csv", index=False)
 
 
 ####################################
