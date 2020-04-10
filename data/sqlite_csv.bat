@@ -1,0 +1,1 @@
+sqlite3 -header -csv %1 < %2 > %3
