@@ -33,5 +33,12 @@ schema = [
                 "FromNode" : "Gene"
             }
         ]
+    },
+    {
+        "entityType" : "Protein",
+        "entityIdKey" : "proteinId",
+        "entityNameKey" : "ensp_id",
+        "properties" : [],
+        "relationships" : []
     }
 ]

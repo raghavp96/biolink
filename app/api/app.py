@@ -26,25 +26,8 @@ def getNodes(node):
         dao = EntityDao("Disease")
     elif node == "protein":
         dao = EntityDao("Protein")
-        # TODO returning dummy data for now
-        test_protein_info = {
-            "Entities": [
-                {
-                    "proteinId": 1,
-                    "proteinName": "Protein 1"
-                },
-                {
-                    "proteinId": 2,
-                    "proteinName": "Protein Numbah 2"
-                }
-            ],
-            "Page": page
-        }
-        return jsonify(test_protein_info)
     else:
         return jsonify({})
-    entities = dao.getEntities(page)
-    print(entities)
     return jsonify(dao.getEntities(page))
 
 
@@ -55,23 +38,7 @@ def getNodeDetails(node, nodeName):
     elif node == "disease":
         dao = EntityDao("Disease")
     elif node == "protein":
-        protein_table = {
-            "Protein 1": {
-                "EntityName": "Protein 1",
-                "Neigbhors": [],
-                "RelatedProtein": ["Protein Numbah 2"]
-            },
-            "Protein Numbah 2": {
-                "EntityName": "Protein Numbah 2",
-                "Neighbors": [],
-                "RelatedProtein": ["Protein 1"]
-            }
-        }
-        return jsonify(protein_table.get(nodeName, None))
-        # entity name
-        # neighbors
-        # related protein
-        # dao = EntityDao("Protein")
+        dao = EntityDao("Protein")
     else:
         return jsonify({})
 
@@ -85,21 +52,6 @@ def searchNodes():
     nodeVal = ""
     if "nodeVal" in request.args:
         nodeVal = request.args.get("nodeVal")
-
-        # TODO fix this later, this is just going to return dummy data
-        if nodeVal == "protein":
-            test_protein_info = [
-                {
-                    "proteinId": 1,
-                    "proteinName": "Protein 1"
-                },
-                {
-                    "proteinId": 2,
-                    "proteinName": "Protein Numbah 2"
-                }
-            ]
-
-            return jsonify(test_protein_info)
 
         for entity_schema in config.schema:
             dao = EntityDao(entity_schema["entityType"])
