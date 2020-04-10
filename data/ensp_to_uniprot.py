@@ -12,9 +12,9 @@ def text_to_csv(text_file: str):
     :return: path to .csc file
     """
 
-    csv_path = "./sources/ppi_links.csv"
+    csv_path = "./data/sources/ppi_links.csv"
 
-    with open(os.path.join("./sources", text_file), 'r') as in_file, open(csv_path,'w') as out_file:
+    with open(os.path.join("./data/sources", text_file), 'r') as in_file, open(csv_path,'w') as out_file:
         in_lines = in_file.readlines()
         out_lines = [line.replace(" ", ",") for line in in_lines]
         out_file.writelines(out_lines)
@@ -95,7 +95,7 @@ def get_uniprot_id_mappings(protein_csv: str):
     df_complete = df_complete.drop(columns=["organism"])
     df_complete = df_complete[df_complete["ensp_id"] != ""]
 
-    df_complete.to_csv("./sources/ensp_uniprot.csv", index=False)
+    df_complete.to_csv("./data/sources/ensp_uniprot.csv", index=False)
 
 
 ####################################
