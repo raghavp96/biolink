@@ -4,15 +4,16 @@ import json
 import shutil
 import subprocess
 import sys
+import platform
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+dir_path = os.path.dirname(os.path.realpath(__file__)).replace('\\','/')
 
-db_dir_path = os.path.join(dir_path, "sources")
-query_dir_path = os.path.join(dir_path, "query")
-csv_dir_path = os.path.join(dir_path, "csv")
+db_dir_path = os.path.join(dir_path, "sources").replace('\\','/')
+query_dir_path = os.path.join(dir_path, "query").replace('\\','/')
+csv_dir_path = os.path.join(dir_path, "csv").replace('\\','/')
 
 def build():
-    with open(os.path.join(dir_path, 'config.json')) as config_file:
+    with open(os.path.join(dir_path, 'config.json').replace('\\','/')) as config_file:
 
         print("Loading Neo4j graph configuration...")
         config = json.load(config_file)
@@ -26,32 +27,42 @@ def build():
 
         for node in nodes:
             db_type = node["dataSource"]["dbType"]
-            db_file_path = os.path.join(db_dir_path, node["dataSource"]["dbFile"])
-            query_file_path = os.path.join(query_dir_path, node["dataSource"]["queryFile"])
-            csv_file_path = os.path.join(csv_dir_path, node["entityType"] + ".csv")
+            db_file_path = os.path.join(db_dir_path, node["dataSource"]["dbFile"]).replace('\\','/')
+            if (db_type == "csv"):
+                print("Loading CSV details for " + node["entityType"] + " into Neo4j...")
+                load_db(node, db_file_path)      
+            else:        
+                query_file_path = os.path.join(query_dir_path, node["dataSource"]["queryFile"]).replace('\\','/')
+                csv_file_path = os.path.join(csv_dir_path, node["entityType"] + ".csv").replace('\\','/')
 
-            print("Exporting " + node["entityType"] + " info (i.e. " + str(node["properties"]) + ") from " + node["dataSource"]["dbFile"] + " into CSV file...")
-            export_db_csv(db_type, db_file_path, query_file_path, csv_file_path)
- 
-            print("Loading CSV details for " + node["entityType"] + " into Neo4j...")
-            load_db(node, csv_file_path)
+                print("Exporting " + node["entityType"] + " info (i.e. " + str(node["properties"]) + ") from " + node["dataSource"]["dbFile"] + " into CSV file...")
+                export_db_csv(db_type, db_file_path, query_file_path, csv_file_path)
+    
+                print("Loading CSV details for " + node["entityType"] + " into Neo4j...")
+                load_db(node, csv_file_path)
 
         for edge in edges:
             db_type = edge["dataSource"]["dbType"]
-            db_file_path = os.path.join(db_dir_path, edge["dataSource"]["dbFile"])
-            query_file_path = os.path.join(query_dir_path, edge["dataSource"]["queryFile"])
-            csv_file_path = os.path.join(csv_dir_path, edge["entityType"] + ".csv")
+            db_file_path = os.path.join(db_dir_path, edge["dataSource"]["dbFile"]).replace('\\','/')
+            if (db_type == "csv"):
+                print("Loading CSV details for " + edge["entityType"] + " into Neo4j...")
+                load_db(edge, db_file_path, isNode=False)  
+            else:
+                query_file_path = os.path.join(query_dir_path, edge["dataSource"]["queryFile"]).replace('\\','/')
+                csv_file_path = os.path.join(csv_dir_path, edge["entityType"] + ".csv").replace('\\','/')
 
-            print("Exporting " + edge["entityType"] + " info (i.e. " + str(edge["properties"]) + ") from " + edge["dataSource"]["dbFile"] + " into CSV file...")
-            export_db_csv(db_type, db_file_path, query_file_path, csv_file_path)
+                print("Exporting " + edge["entityType"] + " info (i.e. " + str(edge["properties"]) + ") from " + edge["dataSource"]["dbFile"] + " into CSV file...")
+                export_db_csv(db_type, db_file_path, query_file_path, csv_file_path)
 
-            print("Loading CSV details for " + edge["entityType"] + " into Neo4j...")
-            load_db(edge, csv_file_path, isNode=False)
+                print("Loading CSV details for " + edge["entityType"] + " into Neo4j...")
+                load_db(edge, csv_file_path, isNode=False)
             
 
 def export_db_csv(db_type, db_path, query_file_path, csv_file_path):
     if db_type == "sqllite3":
-        sqllite_csv_path = os.path.join(dir_path, "sqlite_csv.sh")
+        sqllite_csv_path = os.path.join(dir_path, "sqlite_csv.sh").replace('\\','/')
+        if (platform.system() == "Windows"):
+            sqllite_csv_path = os.path.join(dir_path, "sqlite_csv.bat").replace('\\','/')
         subprocess.run(
             [sqllite_csv_path, db_path, query_file_path, csv_file_path], 
             check=True, shell=False)
@@ -67,6 +78,8 @@ def export_db_csv(db_type, db_path, query_file_path, csv_file_path):
 def load_db(entity, csv_file_path, isNode=True):
     if isNode:
         query = "USING PERIODIC COMMIT LOAD CSV WITH HEADERS FROM \"file://" + csv_file_path + "\" AS row "
+        if (platform.system() == "Windows"):
+            query = "USING PERIODIC COMMIT LOAD CSV WITH HEADERS FROM \"file:///" + csv_file_path + "\" AS row "
         node_properties = entity["properties"]
         prop_string = " {"
 
@@ -87,18 +100,27 @@ def load_db(entity, csv_file_path, isNode=True):
 
     else:
         query = "USING PERIODIC COMMIT LOAD CSV WITH HEADERS FROM \"file://" + csv_file_path + "\" AS row "
-        query += "MATCH (from:" + entity["fromNodeType"] + " {" + entity["fromNodeKey"] + ": row." + entity["fromNodeKey"] +  "}) "
-        query += "MATCH (to:" + entity["toNodeType"] + " {" + entity["toNodeKey"] + ": row." + entity["toNodeKey"] + "}) "
+        if (platform.system() == "Windows"):
+            query = "USING PERIODIC COMMIT LOAD CSV WITH HEADERS FROM \"file:///" + csv_file_path + "\" AS row "
+        
+        if ("fromNodeHeader" in entity and "toNodeHeader" in entity):
+            print("special case reached")
+            query += "MATCH (from:" + entity["fromNodeType"] + " {" + entity["fromNodeKey"] + ": row." + entity["fromNodeHeader"] +  "}) "
+            query += "MATCH (to:" + entity["toNodeType"] + " {" + entity["toNodeKey"] + ": row." + entity["toNodeHeader"] + "}) "
+        else:
+            query += "MATCH (from:" + entity["fromNodeType"] + " {" + entity["fromNodeKey"] + ": row." + entity["fromNodeKey"] +  "}) "
+            query += "MATCH (to:" + entity["toNodeType"] + " {" + entity["toNodeKey"] + ": row." + entity["toNodeKey"] + "}) "
 
         query += "MERGE (from)-[e:" + entity["entityType"] + "]->(to) "
+        
+        if(len(entity["properties"]) > 0):
+            query += "ON CREATE SET"
 
-        query += "ON CREATE SET"
-
-        for prop in entity["properties"]:
-            if is_numeric(prop):
-                query += " e." + prop + " = toFloat(row." + prop + ")"
-            else:
-                query += " e." + prop + " = row." + prop
+            for prop in entity["properties"]:
+                if is_numeric(prop):
+                    query += " e." + prop + " = toFloat(row." + prop + ")"
+                else:
+                    query += " e." + prop + " = row." + prop
         
         query += ";"
         run_query(query)
@@ -110,7 +132,7 @@ def is_numeric(property):
 
 def run_query(query_string):
     from neo4j import GraphDatabase
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "admin"))
+    driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "admin"), encrypted=False)
 
     print(query_string)
 
