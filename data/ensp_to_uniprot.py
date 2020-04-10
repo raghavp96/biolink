@@ -12,7 +12,7 @@ def text_to_csv(text_file: str):
     :return: path to .csc file
     """
 
-    csv_path = "./sources/ppi_links.csv"
+    csv_path = "./data/sources/ppi_links.csv"
 
     with open(os.path.join("./data/sources", text_file), 'r') as in_file, open(csv_path,'w') as out_file:
         in_lines = in_file.readlines()
