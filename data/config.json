@@ -34,6 +34,20 @@
                 "queryFile" : "export_disease.sql",
                 "dbType" : "sqllite3"
             }
+        },
+        {
+            "entityType" : "Protein",
+            "entityIdKey" : "ensp_id",
+            "entityNameKey" : "ensp_id",
+            "properties" : [
+                "ensp_id"
+            ],
+            "indices": ["ensp_id"],
+            "dataSource" : {
+                "dbFile" : "ensp_uniprot.csv",
+                "queryFile" : "",
+                "dbType" : "csv"
+            }
         }
     ],
     "edges" : [
@@ -50,6 +64,38 @@
                 "dbFile" : "disgenet_2018.db",
                 "queryFile" : "export_association.sql",
                 "dbType" : "sqllite3"
+            }
+        },
+        {
+            "entityType": "InteractsWith",
+            "fromNodeType" : "Protein",
+            "fromNodeKey" : "ensp_id",
+            "fromNodeHeader": "protein1",
+            "toNodeType" : "Protein",
+            "toNodeKey" : "ensp_id",
+            "toNodeHeader": "protein2",
+            "properties" : [
+                "combined_score"
+            ],
+            "dataSource" : {
+                "dbFile" : "ppi_links.csv",
+                "queryFile" : "",
+                "dbType" : "csv"
+            }
+        },
+        {
+            "entityType": "EncodesFor",
+            "fromNodeType" : "Gene",
+            "fromNodeKey" : "geneName",
+            "fromNodeHeader": "uniprot_id",
+            "toNodeType" : "Protein",
+            "toNodeKey" : "ensp_id",
+            "toNodeHeader": "ensp_id",
+            "properties" : [],
+            "dataSource" : {
+                "dbFile" : "ensp_uniprot.csv",
+                "queryFile" : "",
+                "dbType" : "csv"
             }
         }
     ]
