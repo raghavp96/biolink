@@ -14,7 +14,7 @@ def text_to_csv(text_file: str):
 
     csv_path = "./sources/ppi_links.csv"
 
-    with open(os.path.join("./sources", text_file), 'r') as in_file, open(csv_path,'w') as out_file:
+    with open(os.path.join("./data/sources", text_file), 'r') as in_file, open(csv_path,'w') as out_file:
         in_lines = in_file.readlines()
         out_lines = [line.replace(" ", ",") for line in in_lines]
         out_file.writelines(out_lines)

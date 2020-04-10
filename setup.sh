@@ -23,4 +23,4 @@ gunzip "${SCRIPT_DIR}/data/sources/${STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME}.gz"
 pip install -r requirements.txt
 
 # convert PPI data to csv, and retrive mappings to UniProtID's
-python ensp_to_uniprot.py ${STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME}
+python ./data/ensp_to_uniprot.py ${STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME}
