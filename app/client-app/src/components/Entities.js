@@ -12,11 +12,11 @@ function Entities(props) {
   const [entities, setEntities] = useState([]);
   const [properties, setProperties] = useState([]);
 
-
   useEffect(() => {
     async function fetchData() {
       const response = await loadEntities(entityType, page);
       const newEntities = entities.concat(response);
+      console.log(newEntities);
       setEntities(newEntities);
       if (newEntities.length > 0) {
         const unorderedProps = Object.keys(newEntities[0]);
@@ -40,5 +40,6 @@ function Entities(props) {
 
 const Genes = () => (<Entities title="Genes" entityType="gene"/>)
 const Diseases = () => (<Entities title="Diseases" entityType="disease"/>)
+const Proteins = () => (<Entities title="Proteins" entityType="protein"/>)
 
-export { Genes, Diseases }
+export { Genes, Diseases, Proteins }

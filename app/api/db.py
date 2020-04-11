@@ -1,6 +1,8 @@
 from neo4j import GraphDatabase
 import pprint
 
+PPI_ACCEPTABLE_SCORE = 975 # association score for protein protein interactions 
+
 class DB(object):
 
     def __init__(self, uri='bolt://localhost:7687', user="neo4j", password="admin"):
@@ -37,12 +39,14 @@ class DB(object):
         result = tx.run(query_string)
         return result.data()
 
-
     @staticmethod
     def getNeighborsOfCertainType(tx, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2):
         """
         """
         neighborType = relationship_details["NeighborType"]
+
+        if neighborType == "Protein" and entityType == "Protein":
+            return DB.queryDB_ppi(tx, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations)
 
         query_string = 'match (n:'+neighborType+') '
 
@@ -54,8 +58,12 @@ class DB(object):
             query_string += 'where size((n)-[:'+relationship_details["RelationName"]+']->(:'+entityType+')) > ' + str(num_associations) + ' with collect(n) as neighbors '
             query_string += 'match (n1:'+neighborType+')-[a:'+relationship_details["RelationName"]+']->(e:'+entityType+' {'+entityNameKey+': "' + entityName + '"}) '
 
-        query_string += 'where n1 in neighbors and a.score > ' + str(acceptable_association_score) + ' return n1;'
+        if neighborType != "Protein":
+            query_string += 'where n1 in neighbors and a.score > ' + str(acceptable_association_score) + ' return n1;'
+        else:
+            query_string += 'where n1 in neighbors and toInteger(a.combined_score) >  return n1;'
         result = tx.run(query_string)
+        print(query_string)
         return result.data()
 
 
@@ -114,3 +122,9 @@ class DB(object):
             results = session.write_transaction(
                 self.getSimilarEntitiesBySimilarNeighbors, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2)
             return [result["e1"][entityNameKey] for result in results]
+
+    @staticmethod
+    def queryDB_ppi(tx, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations):
+        query_string = "match (n:Protein {" + entityNameKey + " : '" + entityName + "'})-[a:" + relationship_details["RelationName"] + "]->(n1:Protein) where toInteger(a.combined_score) > " + str(PPI_ACCEPTABLE_SCORE) + " return n1;"
+        result = tx.run(query_string)
+        return result.data()

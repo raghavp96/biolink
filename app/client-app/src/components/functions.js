@@ -1,6 +1,6 @@
 // REST API Calls
 
-const allowedEntityTypes = ["gene", "disease"]
+const allowedEntityTypes = ["gene", "disease", "protein"]
 
 async function loadEntities(entityType, page) {
     var page_number = encodeURIComponent(page)
@@ -70,4 +70,17 @@ async function loadDiseaseInfo(diseaseName) {
     return response;
 }
 
-export { loadDiseaseInfo, loadGeneInfo, loadEntities, loadSearchResults };
+async function loadProteinInfo(ensp_id) {
+    var url = new URL("http://localhost:5000/protein/" + ensp_id)
+    let response = await fetch(url, {
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then((res) => (res.json()));
+
+    return response;
+}
+
+export { loadProteinInfo, loadDiseaseInfo, loadGeneInfo, loadEntities, loadSearchResults };
