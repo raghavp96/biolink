@@ -41,7 +41,6 @@ def getNodeDetails(node, nodeName):
         dao = EntityDao("Protein")
     else:
         return jsonify({})
-
     return jsonify(dao.getEntityInfo(nodeName))
 
 

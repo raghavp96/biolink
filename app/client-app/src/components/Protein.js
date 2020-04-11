@@ -4,24 +4,26 @@ import { Link, useParams } from "react-router-dom";
 import { loadProteinInfo } from './functions';
 
 export default function Protein() {
-  let { proteinName } = useParams();
-
+  let { ensp_id } = useParams();
   const [data, setData] = useState({});
 
   useEffect(() => {
+    setData({
+      Neighbors: [],
+      RelatedProtein: []
+    })
     async function fetchData() {
-      const response = await loadProteinInfo(proteinName);
+      console.log('ensp id is ' + ensp_id);
+      const response = await loadProteinInfo(ensp_id);
       console.log(response)
       setData(response);
+      console.log('i am here')
     }
     fetchData();
-  }, [proteinName]);
+  }, [ensp_id]);
 
-  // let related = Object.assign({}, data.Neighbors)
-  let proteins = [].concat(data.RelatedProtein)
-  // var genes = [].concat(related.Gene)
-  // related = Object.assign({}, data.RelatedDisease)
-  // var diseases = [].concat(related.RelatedByGene)
+  let related = Object.assign({}, data.Neighbors)
+  let proteins = [].concat(related.Protein)
 
     return (
         <div>

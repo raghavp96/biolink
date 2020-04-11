@@ -41,7 +41,7 @@ export default function App() {
           <Route path={`/disease/:diseaseName`}>
             <Disease />
           </Route>
-          <Route path={`/protein/:proteinName`}>
+          <Route path={`/protein/:ensp_id`}>
             <Protein />
           </Route>
           <Route path="/gene">

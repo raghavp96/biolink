@@ -16,9 +16,9 @@ const schema = [
     {
         entityType: "protein",
         propertiesOfImportance: [
-            "proteinName", "proteinId"
+            "ensp_id"
         ],
-        nameKey: "proteinName"
+        nameKey: "ensp_id"
     }
 ]
 

@@ -70,8 +70,8 @@ async function loadDiseaseInfo(diseaseName) {
     return response;
 }
 
-async function loadProteinInfo(proteinName) {
-    var url = new URL("http://localhost:5000/protein/" + proteinName)
+async function loadProteinInfo(ensp_id) {
+    var url = new URL("http://localhost:5000/protein/" + ensp_id)
     let response = await fetch(url, {
         mode: 'cors',
         credentials: 'same-origin',

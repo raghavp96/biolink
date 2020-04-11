@@ -54,8 +54,12 @@ class DB(object):
             query_string += 'where size((n)-[:'+relationship_details["RelationName"]+']->(:'+entityType+')) > ' + str(num_associations) + ' with collect(n) as neighbors '
             query_string += 'match (n1:'+neighborType+')-[a:'+relationship_details["RelationName"]+']->(e:'+entityType+' {'+entityNameKey+': "' + entityName + '"}) '
 
-        query_string += 'where n1 in neighbors and a.score > ' + str(acceptable_association_score) + ' return n1;'
+        if neighborType != "Protein":
+            query_string += 'where n1 in neighbors and a.score > ' + str(acceptable_association_score) + ' return n1;'
+        else:
+            query_string += 'where n1 in neighbors and toInteger(a.combined_score) > 975 return n1;'
         result = tx.run(query_string)
+        print(query_string)
         return result.data()
 
 
