@@ -13,11 +13,9 @@ export default function Protein() {
       RelatedProtein: []
     })
     async function fetchData() {
-      console.log('ensp id is ' + ensp_id);
       const response = await loadProteinInfo(ensp_id);
       console.log(response)
       setData(response);
-      console.log('i am here')
     }
     fetchData();
   }, [ensp_id]);
