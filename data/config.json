@@ -44,7 +44,7 @@
             ],
             "indices": ["ensp_id"],
             "dataSource" : {
-                "dbFile" : "ensp_uniprot.csv",
+                "dbFile" : "ensp_disgen_id.csv",
                 "queryFile" : "",
                 "dbType" : "csv"
             }
@@ -86,14 +86,14 @@
         {
             "entityType": "EncodesFor",
             "fromNodeType" : "Gene",
-            "fromNodeKey" : "geneName",
-            "fromNodeHeader": "uniprot_id",
+            "fromNodeKey" : "geneId",
+            "fromNodeHeader": "geneId",
             "toNodeType" : "Protein",
             "toNodeKey" : "ensp_id",
             "toNodeHeader": "ensp_id",
             "properties" : [],
             "dataSource" : {
-                "dbFile" : "ensp_uniprot.csv",
+                "dbFile" : "ensp_disgen_id.csv",
                 "queryFile" : "",
                 "dbType" : "csv"
             }

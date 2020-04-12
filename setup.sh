@@ -4,6 +4,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 DISGENET_DB_FILE_NAME="disgenet_2018.db"
 GOA_HUMAN_PROTEIN_GAF_FILE_NAME="goa_human.gaf"
 STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME="9606.protein.links.v11.0.txt"
+DISGENET_UNIPROT_MAPPING_FILE_NAME="mapa_geneid_4_uniprot_crossref.tsv"
 
 # install sqllite3, neo4j, wget, gunzip
 
@@ -19,8 +20,12 @@ gunzip "${SCRIPT_DIR}/data/sources/${GOA_HUMAN_PROTEIN_GAF_FILE_NAME}.gz"
 wget -P "${SCRIPT_DIR}/data/sources/" "https://stringdb-static.org/download/protein.links.v11.0/${STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME}.gz"
 gunzip "${SCRIPT_DIR}/data/sources/${STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME}.gz"
 
+# download disgenet geneID to uniport mappings
+wget -P "${SCRIPT_DIR}/data/sources/" "https://www.disgenet.org/static/disgenet_ap1/files/downloads/${DISGENET_UNIPROT_MAPPING_FILE_NAME}.gz"
+gunzip "${SCRIPT_DIR}/data/sources/${DISGENET_UNIPROT_MAPPING_FILE_NAME}.gz"
+
 # install python requirements
 pip install -r requirements.txt
 
 # convert PPI data to csv, and retrive mappings to UniProtID's
-python ./data/ensp_to_uniprot.py ${STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME}
+python ./data/ensp_to_disgen.py ${STRINGDB_HUMAN_PROTEIN_LINKS_FILE_NAME} ${DISGENET_UNIPROT_MAPPING_FILE_NAME}

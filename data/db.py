@@ -12,6 +12,7 @@ db_dir_path = os.path.join(dir_path, "sources").replace('\\','/')
 query_dir_path = os.path.join(dir_path, "query").replace('\\','/')
 csv_dir_path = os.path.join(dir_path, "csv").replace('\\','/')
 
+
 def build():
     with open(os.path.join(dir_path, 'config.json').replace('\\','/')) as config_file:
 

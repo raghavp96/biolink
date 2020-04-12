@@ -5,21 +5,19 @@ from multiprocessing import Pool
 import pandas as pd
 
 
-def text_to_csv(text_file: str):
+def text_to_csv(text_file: str, out_path: str):
     """
     Converts space-delimited .txt file to .csv
     :param text_file: input file
-    :return: path to .csc file
+    :return: path to .csv file
     """
 
-    csv_path = "./data/sources/ppi_links.csv"
-
-    with open(os.path.join("./data/sources", text_file), 'r') as in_file, open(csv_path,'w') as out_file:
+    with open(os.path.join("./data/sources", text_file), 'r') as in_file, open(out_path,'w') as out_file:
         in_lines = in_file.readlines()
         out_lines = [line.replace(" ", ",") for line in in_lines]
         out_file.writelines(out_lines)
 
-    return csv_path
+    return out_path
 
 
 def chunks(lst: [], n: int):
@@ -33,7 +31,7 @@ def chunks(lst: [], n: int):
         yield lst[i:i + n]
 
 
-def get_uniprot_id_mappings(protein_csv: str):
+def get_uniprot_id_mappings(protein_csv: str, gene_uniprot_tsv: str):
     """
     Retrieves all UniProt ID mappings for StringDB ensp IDs.
     Most ensp ID's have cross-references in UniProt, so they can be
@@ -95,7 +93,15 @@ def get_uniprot_id_mappings(protein_csv: str):
     df_complete = df_complete.drop(columns=["organism"])
     df_complete = df_complete[df_complete["ensp_id"] != ""]
 
-    df_complete.to_csv("./data/sources/ensp_uniprot.csv", index=False)
+    uniprot_disgen_df = pd.read_table(os.path.join("./data/sources/", gene_uniprot_tsv))
+
+    joined_df = df_complete.join(uniprot_disgen_df.set_index("UniProtKB"), on="uniprot_id")
+
+    joined_df["geneId"] = joined_df["GENEID"].astype('Int64')
+    joined_df = joined_df.drop(columns=["uniprot_id", "GENEID"])
+
+    joined_df.to_csv("./data/sources/ensp_disgen_id.csv", index=False)
+
 
 
 ####################################
@@ -147,12 +153,13 @@ def main():
     )
 
     parser.add_argument("text_file", type=str, help="name of StringDB Protein Links .txt file")
+    parser.add_argument("uniprot_disgen_mapping", type=str, help="name of DisGeNet UniProtID mapping .tsv file")
 
     args = parser.parse_args()
 
-    protein_link_csv = text_to_csv(args.text_file)
+    protein_link_csv = text_to_csv(args.text_file, "./data/sources/ppi_links.csv")
 
-    get_uniprot_id_mappings(protein_link_csv)
+    get_uniprot_id_mappings(protein_link_csv, args.uniprot_disgen_mapping)
 
 
 if __name__ == '__main__':

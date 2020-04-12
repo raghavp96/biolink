@@ -2,3 +2,4 @@ data/sources/
 data/csv/
 misc/
 .idea/
+*.DS_store
