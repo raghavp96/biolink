@@ -45,8 +45,8 @@ class DB(object):
         """
         neighborType = relationship_details["NeighborType"]
 
-        if neighborType == "Protein" and entityType == "Protein":
-            return DB.queryDB_ppi(tx, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations)
+        if neighborType == "Protein" and entityType == "Protein": # for proteins we simply want to get the immediate neighbors 
+            return DB.getImmediateOutgoingNeighbors(tx, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations)
 
         query_string = 'match (n:'+neighborType+') '
 
@@ -87,6 +87,13 @@ class DB(object):
         result = tx.run(query_string)
         return result.data()
 
+    # method for getting the immediate outgoing neighbors of the given entity (i.e. the neighbors that this entity points to)
+    @staticmethod
+    def getImmediateOutgoingNeighbors(tx, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations):
+        query_string = "match (n:" + entityType + " {" + entityNameKey + " : '" + entityName + "'})-[a:" + relationship_details["RelationName"] + "]->(n1:Protein) where toInteger(a.combined_score) > " + str(PPI_ACCEPTABLE_SCORE) + " return n1;"
+        result = tx.run(query_string)
+        return result.data()
+
 
     def queryDB_Entities(self, entityType, entityIdKey, entityNameKey, page=0):
         """
@@ -123,8 +130,4 @@ class DB(object):
                 self.getSimilarEntitiesBySimilarNeighbors, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2)
             return [result["e1"][entityNameKey] for result in results]
 
-    @staticmethod
-    def queryDB_ppi(tx, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations):
-        query_string = "match (n:Protein {" + entityNameKey + " : '" + entityName + "'})-[a:" + relationship_details["RelationName"] + "]->(n1:Protein) where toInteger(a.combined_score) > " + str(PPI_ACCEPTABLE_SCORE) + " return n1;"
-        result = tx.run(query_string)
-        return result.data()
+ 
