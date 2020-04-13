@@ -14,6 +14,13 @@ schema = [
                 "NeighborType" : "Disease",
                 "NeighborNameKey" : "diseaseName",
                 "RelationName" : "AssociatesWith",
+                "FromNode" : "Gene",
+                "ScoreName" : "score"
+            },
+            {
+                "NeighborType" : "Protein",
+                "NeighborNameKey" : "ensp_id",
+                "RelationName" : "EncodesFor",
                 "FromNode" : "Gene"
             }
         ]
@@ -30,7 +37,8 @@ schema = [
                 "NeighborType" : "Gene",
                 "NeighborNameKey" : "geneName",
                 "RelationName" : "AssociatesWith",
-                "FromNode" : "Gene"
+                "FromNode" : "Gene",
+                "ScoreName" : "score"
             }
         ]
     },
@@ -45,15 +53,14 @@ schema = [
                 "NeighborNameKey" : "ensp_id",
                 "RelationName" : "InteractsWith",
                 "FromNode" : "Protein",
-                "ScoreAttribute" : "combined_score",
-                "RelationshipType" : "bidirectional"
+                "ScoreName" : "combined_score",
+                "AcceptableAssociationScore" : 975
             },
             {
                 "NeighborType" : "Gene",
                 "NeighborNameKey" : "geneName",
                 "RelationName" : "EncodesFor",
-                "FromNode" : "Gene",
-                "RelationshipDirection" : "incoming"
+                "FromNode" : "Gene"
             }
         ]
     }
