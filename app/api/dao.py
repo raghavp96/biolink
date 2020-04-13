@@ -51,16 +51,19 @@ class EntityDao(object):
         for rel in self.schema["relationships"]:
             neighborType = rel["NeighborType"]
             neighborNameKey = rel["NeighborNameKey"]
+            relationshipDirection = rel.get("RelationshipDirection", None)
             info["Neighbors"][neighborType] = self.dbq.queryDB_Neighbors(
                 entityType=self.schema["entityType"], 
                 entityNameKey=self.schema["entityNameKey"], 
                 entityName=entityName, 
-                relationship_details=rel)
+                relationship_details=rel,
+                relationship_direction=relationshipDirection)
             info["Related" + self.schema["entityType"]]["RelatedBy" + neighborType] = self.dbq.queryDB_SimilarByNeighbor(
                 entityType=self.schema["entityType"], 
                 entityNameKey=self.schema["entityNameKey"], 
                 entityName=entityName, 
-                relationship_details=rel)
+                relationship_details=rel,
+                relationship_direction=relationshipDirection)
 
         return info
 

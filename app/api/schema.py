@@ -44,7 +44,16 @@ schema = [
                 "NeighborType" : "Protein",
                 "NeighborNameKey" : "ensp_id",
                 "RelationName" : "InteractsWith",
-                "FromNode" : "Protein"
+                "FromNode" : "Protein",
+                "ScoreAttribute" : "combined_score",
+                "RelationshipType" : "bidirectional"
+            },
+            {
+                "NeighborType" : "Gene",
+                "NeighborNameKey" : "geneName",
+                "RelationName" : "EncodesFor",
+                "FromNode" : "Gene",
+                "RelationshipDirection" : "incoming"
             }
         ]
     }

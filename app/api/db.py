@@ -45,9 +45,13 @@ class DB(object):
         """
         neighborType = relationship_details["NeighborType"]
 
+        # special cases for Protein-Protein and Gene-Protein relationships 
         if neighborType == "Protein" and entityType == "Protein": # for proteins we simply want to get the immediate neighbors 
-            return DB.getImmediateOutgoingNeighbors(tx, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations)
-
+            return DB.getImmediateOutgoingNeighbors(tx, entityType, entityNameKey, entityName, neighborType, relationship_details, acceptable_association_score, num_associations)
+        elif neighborType == "Gene" and entityType == "Protein": # for genes that encode for a protein we simply want to find the protein's incoming neighbors
+            return DB.getImmediateIncomingNeighbors(tx, entityType, entityNameKey, entityName, neighborType, relationship_details, acceptable_association_score, num_associations)
+        
+        
         query_string = 'match (n:'+neighborType+') '
 
         if relationship_details["FromNode"] == entityType:
@@ -88,12 +92,22 @@ class DB(object):
         return result.data()
 
     # method for getting the immediate outgoing neighbors of the given entity (i.e. the neighbors that this entity points to)
+    # todo, fix acceptable_association_score, add in association_score_attribute
     @staticmethod
-    def getImmediateOutgoingNeighbors(tx, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score, num_associations):
-        query_string = "match (n:" + entityType + " {" + entityNameKey + " : '" + entityName + "'})-[a:" + relationship_details["RelationName"] + "]->(n1:Protein) where toInteger(a.combined_score) > " + str(PPI_ACCEPTABLE_SCORE) + " return n1;"
+    def getImmediateOutgoingNeighbors(tx, entityType, entityNameKey, entityName, neighborType, relationship_details, acceptable_association_score, num_associations):
+        query_string = "match (n:" + entityType + " {" + entityNameKey + " : '" + entityName + "'})-[a:" + relationship_details["RelationName"] + "]->(n1: " + neighborType + ") where toInteger(a.combined_score) > " + str(PPI_ACCEPTABLE_SCORE) + " return n1;"
+        print(query_string)
         result = tx.run(query_string)
         return result.data()
 
+    # method for getting the immediate incoming neighbors of the given entity (i.e. the neighbors that point to the entityt)
+    @staticmethod
+    def getImmediateIncomingNeighbors(tx, entityType, entityNameKey, entityName, neighborType, relationship_details, acceptable_association_score, num_associations): 
+        query_string = "match (n:" + neighborType + ")-[a:" + relationship_details["RelationName"] + "]->(n1: " + entityType + " {" + entityNameKey + " : '" + \
+             entityName + "'}) return n;"
+        print(query_string)
+        result = tx.run(query_string)
+        return result.data()
 
     def queryDB_Entities(self, entityType, entityIdKey, entityNameKey, page=0):
         """
@@ -113,16 +127,21 @@ class DB(object):
             return [result["e1"] for result in results]
 
 
-    def queryDB_Neighbors(self, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2):
+    # a relationship_direction field was added to determine what to kind of neighbors to return. The possible values are bidirectional, incoming, and outgoing
+    def queryDB_Neighbors(self, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2, relationship_direction="bidirectional"):
         """
         """
         with self._driver.session() as session:
             results = session.write_transaction(
                 self.getNeighborsOfCertainType, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2)
-            return [result["n1"][relationship_details["NeighborNameKey"]] for result in results]
+            if relationship_direction == "incoming": 
+                return [result["n"][relationship_details["NeighborNameKey"]] for result in results]
+            else:
+                return [result["n1"][relationship_details["NeighborNameKey"]] for result in results]
 
 
-    def queryDB_SimilarByNeighbor(self, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2):
+ # a relationship_direction field was added to determine what to kind of neighbors to return. The possible values are bidirectional, incoming, and outgoing
+    def queryDB_SimilarByNeighbor(self, entityType, entityNameKey, entityName, relationship_details, acceptable_association_score=0.5, num_associations=2, relationship_direction="bidirectional"):
         """
         """
         with self._driver.session() as session:
