@@ -26,7 +26,6 @@ class DB(object):
         """
         """
         query_string = 'MATCH (e1:'+entityType+') WHERE e1.' + entityKey + '=~ \".*' + entityValue + '.*\" RETURN e1;'
-        print(query_string)
         result = tx.run(query_string)
         return result.data()
 
@@ -63,7 +62,6 @@ class DB(object):
             query_string += 'match (n1:'+neighborType+')-[a:'+relationship_details["RelationName"]+']->(e:'+entityType+' {'+entityNameKey+': "' + entityName + '"}) '
 
         query_string += 'where n1 in neighbors and a.score > ' + str(acceptable_association_score) + ' return n1;'
-        print(query_string)
         result = tx.run(query_string)
         return result.data()
 
@@ -94,7 +92,6 @@ class DB(object):
     def getImmediateOutgoingNeighbors(tx, entityType, entityNameKey, entityName, neighborType, relationship_details, acceptable_association_score, num_associations):
         query_string = "match (n:" + entityType + " {" + entityNameKey + " : '" + entityName + "'})-[a:" + relationship_details["RelationName"] + "]->(n1: " + neighborType + ") " + \
             (("where toInteger(a." + relationship_details.get("ScoreName") + ") > " + str(acceptable_association_score)) if relationship_details.get("ScoreName") else "") + " return n1;"
-        print(query_string)
         result = tx.run(query_string)
         return result.data()
 
@@ -104,7 +101,6 @@ class DB(object):
         query_string = "match (n1:" + neighborType + ")-[a:" + relationship_details["RelationName"] + "]->(n: " + entityType + " {" + entityNameKey + " : '" + \
             entityName + "'}) " + (("where toInteger(a." + relationship_details.get("ScoreName") + ") > " + acceptable_association_score) if relationship_details.get("ScoreName") else "") + \
             " return n1;"
-        print(query_string)
         result = tx.run(query_string)
         return result.data()
 

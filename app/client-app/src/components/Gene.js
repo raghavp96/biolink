@@ -20,10 +20,9 @@ export default function Gene() {
 
     var related = Object.assign({}, data.Neighbors)
     var diseases = [].concat(related.Disease)
+    var proteins = [].concat(related.Protein)
     related = Object.assign({}, data.RelatedGene)
     var genes = [].concat(related.RelatedByDisease)
-
-
     return (
         <div>
             <center><h1>Gene Details</h1></center>
@@ -40,6 +39,14 @@ export default function Gene() {
                 <ul>
                     {genes.map((gene) => (
                         <li><Link to={`/gene/${gene}`}>{gene}</Link></li>
+                    ))}
+                </ul>
+            </div>
+            <div>
+                Encodes Protein 
+                <ul>
+                    {proteins.map((protein) => (
+                        <li><Link to={`/protein/${protein}`}>{protein}</Link></li>
                     ))}
                 </ul>
             </div>
