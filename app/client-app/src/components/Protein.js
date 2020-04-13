@@ -22,7 +22,7 @@ export default function Protein() {
 
   let related = Object.assign({}, data.Neighbors)
   let proteins = [].concat(related.Protein)
-
+  let genes = [].concat(related.Gene)
     return (
         <div>
       <center><h1>Protein Details</h1></center>
@@ -36,6 +36,11 @@ export default function Protein() {
       </div>
       <div>
         Encoded By Gene
+        <ul>
+          {genes.map((gene) => (
+            <li><Link to={`/gene/${gene}`}>{gene}</Link></li> 
+          ))}
+        </ul>
       </div>
         
     </div>
