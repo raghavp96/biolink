@@ -26,8 +26,9 @@ We're working to make an easily configurable set up process, one that also helps
         ------
         $ conda create --name biolink_data_tool python=3.7.0
         $ conda activate biolink_data_tool
+        $ pip install -r requirements.txt
         ------
-        $ python db.py
+        $ python db.py create
     
 
 #### Setting up the back end

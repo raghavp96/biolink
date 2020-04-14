@@ -18,8 +18,7 @@ To do this, go to the config file for your instance:
 #### Create DB
 Using Python3, install all the requirements needed: `pip install -r requirements.txt`
 
-Run `python ensp_to_uniprot.py` 
-Then run: `python db.py create`
+Run: `python db.py create`
 
 #### Delete DB
 Sometimes you might want to delete the database (if you're testing the addition of a new node for example and messed up. (I have)). Run: `python db.py delete`
